@@ -1,8 +1,10 @@
+import 'package:connect/controllers/motion_controller.dart';
 import 'package:connect/design/colors.dart';
 import 'package:connect/widgets/header_text.dart';
 import 'package:connect/widgets/icon_and_text.dart';
 import 'package:connect/widgets/standard_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -15,8 +17,8 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   PageController pageController = PageController(viewportFraction: 0.9);
   var _currentPageValue = 0.0;
-  var _scaleFactor = 0.8;
-  var _height = 320;
+  final _scaleFactor = 0.8;
+  final _height = 320;
 
   @override
   void initState() {
@@ -30,19 +32,27 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   @override
   void dispose() {
+    super.dispose();
     pageController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 320,
-      child: PageView.builder(
-        controller: pageController,
-          itemCount: 5,
-          itemBuilder: (context, position) {
-        return _buildPageItem(position);
-      }),
+    return Column(
+      children: [
+        //slider
+        GetBuilder<MotionController>(builder: (motions){
+          return Container(
+              height: 320,
+              child: PageView.builder(
+                  controller: pageController,
+                  itemCount: motions.motionList.isEmpty ? 1 : motions.motionList.length,
+                  itemBuilder: (context, position) {
+                    return _buildPageItem(position);
+                  })
+          );
+        }),
+      ],
     );
   }
 

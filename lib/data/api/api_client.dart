@@ -1,5 +1,4 @@
-import 'dart:wasm';
-
+import 'package:connect/utils/app_constants.dart';
 import 'package:get/get.dart';
 
 class ApiClient extends GetConnect implements GetxService {
@@ -12,15 +11,20 @@ class ApiClient extends GetConnect implements GetxService {
     required this.appBaseUrl
   }){
     baseUrl = appBaseUrl;
-    timeout = Duration(seconds: 30);
+    timeout = const Duration(seconds: 30);
+    token = AppConstants.TOKEN;
+    token = token.replaceAll(RegExp('"'), '');
     _mainHeaders = {
-      'Conent-type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token'
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'JWT $token',
      };
   }
 
-  Future<Response> getDate(String uri) async {
+  Future<Response> getData(String uri) async {
     try {
+      print(baseUrl);
+      print(uri);
+      print(_mainHeaders);
       Response response = await get(uri);
       return response;
     } catch(e) {
